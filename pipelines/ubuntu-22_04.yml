@@ -1,0 +1,26 @@
+# ubuntu-22_04.yml
+include:
+  - local: pipelines/build-image-template.yml
+
+workflow:
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
+    - if: '$CI_COMMIT_BRANCH'
+
+stages:
+  - build
+
+# Job using the template for Ubuntu 22.04
+build-ubuntu-22_04:
+  extends: .build-image-template
+  variables:
+    DOCKERFILE_PATH: ubuntu-22_04/Dockerfile
+    PLATFORMS: linux/amd64,linux/arm64
+    IMAGE_NAME: gitlab-pipeline-ubuntu
+    IMAGE_VERSION: '22.04'
+    HARBOR_PROJECT: dev-tools
+  rules:
+    - changes:
+        - pipelines/ubuntu-22_04-java.yml
+      when: always
+

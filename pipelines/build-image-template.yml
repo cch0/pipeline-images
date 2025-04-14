@@ -1,0 +1,46 @@
+# build-image-template.yml
+.build-image-template:
+  stage: build
+  image: docker:dind
+  tags:
+    - self-hosted
+  variables:
+    GIT_DEPTH: 1
+    HARBOR_REGISTRY: oci.saicds.com
+    DOCKERFILE_PATH: ""  # To be overridden
+    PLATFORMS: ""        # To be overridden
+    IMAGE_NAME: ""       # To be overridden
+    IMAGE_VERSION: ""    # To be overridden
+    HARBOR_PROJECT: ""   # To be overridden
+  before_script:
+    - echo "DOCKERFILE_PATH is $DOCKERFILE_PATH"
+    - echo "IMAGE_NAME is $IMAGE_NAME"
+    - echo "HARBOR_REGISTRY is $HARBOR_REGISTRY"
+    - echo "PLATFORMS is $PLATFORMS"
+    - echo "HARBOR_USERNAME is $HARBOR_USERNAME"
+    - echo "HARBOR_TOKEN is $HARBOR_TOKEN"
+    - echo "HARBOR_USERNAME=$HARBOR_USERNAME" > scripts/.env
+    - echo "HARBOR_TOKEN=$HARBOR_TOKEN" >> scripts/.env
+    - echo "HARBOR_REGISTRY=$HARBOR_REGISTRY" >> scripts/.env
+    - docker --version
+    - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    - docker buildx create --name multiarch-builder --driver docker-container --use
+    - docker buildx inspect --bootstrap
+    - chmod +x scripts/docker-login.sh
+    - cd scripts
+    - sh docker-login.sh
+    - cd ../
+  script:
+    - FULL_IMAGE_NAME="$HARBOR_REGISTRY/$HARBOR_PROJECT/$IMAGE_NAME:$IMAGE_VERSION"
+    - echo "FULL_IMAGE_NAME is $FULL_IMAGE_NAME"
+    - docker buildx build --platform $PLATFORMS -f $DOCKERFILE_PATH -t "$FULL_IMAGE_NAME" --push .
+    - docker images
+  rules:
+    - changes:
+        - $DOCKERFILE_PATH
+      when: always
+    - if: '$CI_COMMIT_BRANCH == "main" || $CI_COMMIT_TAG'
+      when: always
+  after_script:
+    - docker logout
+
