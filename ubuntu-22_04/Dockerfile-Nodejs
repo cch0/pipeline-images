@@ -1,0 +1,37 @@
+FROM oci.saicds.com/dev-tools/gitlab-pipeline-ubuntu:22.04
+
+# Set non-interactive frontend to avoid prompts during build
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Define build arguments for NVM, Node.js, and npm versions
+ARG NVM_VERSION=0.39.7
+ARG NODE_VERSION_16=16.20.2
+ARG NODE_VERSION_20=20.18.0
+ARG NODE_VERSION_22=22.4.1
+ARG NPM_VERSION_16=9.8.1
+ARG NPM_VERSION_20=10.8.3
+ARG NPM_VERSION_22=10.8.3
+
+# Install NVM with specified version
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v${NVM_VERSION}/install.sh | bash \
+    && export NVM_DIR="$HOME/.nvm" \
+    && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" \
+    && [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# Install Node.js versions 16, 20, and 22 using NVM and install specific npm versions
+RUN bash -c "source $HOME/.nvm/nvm.sh && nvm install ${NODE_VERSION_16} && npm install -g npm@${NPM_VERSION_16}" \
+    && bash -c "source $HOME/.nvm/nvm.sh && nvm install ${NODE_VERSION_20} && npm install -g npm@${NPM_VERSION_20}" \
+    && bash -c "source $HOME/.nvm/nvm.sh && nvm install ${NODE_VERSION_22} && npm install -g npm@${NPM_VERSION_22}" \
+    && bash -c "source $HOME/.nvm/nvm.sh && nvm alias default ${NODE_VERSION_20}"
+
+# Ensure NVM is sourced for future sessions
+RUN echo "export NVM_DIR=\"$HOME/.nvm\"" >> /root/.bashrc \
+    && echo "[ -s \"$NVM_DIR/nvm.sh\" ] && \. \"$NVM_DIR/nvm.sh\"" >> /root/.bashrc \
+    && echo "[ -s \"$NVM_DIR/bash_completion\" ] && \. \"$NVM_DIR/bash_completion\"" >> /root/.bashrc
+
+# Verify installations
+RUN bash -c "source $HOME/.nvm/nvm.sh && nvm --version" \
+    && bash -c "source $HOME/.nvm/nvm.sh && nvm use ${NODE_VERSION_16} && node --version && npm --version" \
+    && bash -c "source $HOME/.nvm/nvm.sh && nvm use ${NODE_VERSION_20} && node --version && npm --version" \
+    && bash -c "source $HOME/.nvm/nvm.sh && nvm use ${NODE_VERSION_22} && node --version && npm --version" \
+    && bash -c "source $HOME/.nvm/nvm.sh && nvm ls"

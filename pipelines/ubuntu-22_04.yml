@@ -5,7 +5,9 @@ include:
 workflow:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
-    - if: '$CI_COMMIT_BRANCH'
+      when: always
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'  # Push to main
+      when: always
 
 stages:
   - build
@@ -20,7 +22,11 @@ build-ubuntu-22_04:
     IMAGE_VERSION: '22.04'
     HARBOR_PROJECT: dev-tools
   rules:
-    - changes:
-        - pipelines/ubuntu-22_04-java.yml
+    - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
       when: always
-
+    - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'  # Push to main
+      when: always
+    - changes:
+        - pipelines/ubuntu-22_04.yml
+        - $DOCKERFILE_PATH  # Include Dockerfile changes
+      when: always

@@ -1,0 +1,53 @@
+FROM oci.saicds.com/dev-tools/gitlab-pipeline-ubuntu:22.04
+
+# Set non-interactive frontend to avoid prompts during build
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Define build arguments for Python versions
+ARG PYTHON_VERSION_310=3.10
+ARG PYTHON_VERSION_311=3.11
+ARG PYTHON_VERSION_312=3.12
+
+# Install pyenv dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    gcc \
+    make \
+    libbz2-dev \
+    libffi-dev \
+    liblzma-dev \
+    libncurses-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    libxml2-dev \
+    libxmlsec1-dev \
+    tk-dev \
+    zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install pyenv
+RUN curl -s https://pyenv.run -o pyenv-install.sh \
+    && bash pyenv-install.sh \
+    && rm pyenv-install.sh
+
+# Configure pyenv environment variables
+ENV PYENV_ROOT=/root/.pyenv
+ENV PATH=$PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
+
+# Install Python versions using pyenv
+RUN pyenv install ${PYTHON_VERSION_310} \
+    && pyenv install ${PYTHON_VERSION_311} \
+    && pyenv install ${PYTHON_VERSION_312} \
+    && pyenv global ${PYTHON_VERSION_310} ${PYTHON_VERSION_311} ${PYTHON_VERSION_312}
+
+# RUN pyenv install ${PYTHON_VERSION_312} \
+#     && pyenv global ${PYTHON_VERSION_312}
+
+# RUN ulimit -s 65532 && pyenv install ${PYTHON_VERSION_311}
+
+
+# Ensure pyenv is sourced for future sessions
+RUN echo 'export PYENV_ROOT=/root/.pyenv' >> /root/.bashrc \
+    && echo 'export PATH=$PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH' >> /root/.bashrc \
+    && echo 'eval "$(pyenv init -)"' >> /root/.bashrc
+
