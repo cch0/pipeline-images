@@ -31,8 +31,6 @@ stages:
     - echo "HARBOR_TOKEN=$HARBOR_TOKEN" >> scripts/.env
     - echo "HARBOR_REGISTRY=$HARBOR_REGISTRY" >> scripts/.env
     - docker --version
-    # - docker buildx create --name amd64-builder --driver docker-container --use
-    # - docker buildx inspect --bootstrap
     - chmod +x scripts/docker-login.sh
     - cd scripts
     - sh docker-login.sh
@@ -40,8 +38,14 @@ stages:
   script:
     - FULL_IMAGE_NAME="$HARBOR_REGISTRY/$HARBOR_PROJECT/$IMAGE_NAME:$IMAGE_VERSION-amd64"
     - echo "Building $FULL_IMAGE_NAME"
-    # - docker buildx build --platform $PLATFORMS -f $DOCKERFILE_PATH -t "$FULL_IMAGE_NAME" --push .
-    - docker build -f $DOCKERFILE_PATH -t "$FULL_IMAGE_NAME" --push .
+    - |
+      if [ -n "$TARGET" ]; then
+        echo "Using target: $TARGET"
+        docker build -f $DOCKERFILE_PATH --target $TARGET -t "$FULL_IMAGE_NAME" --push .
+      else
+        echo "No target specified, building default"
+        docker build -f $DOCKERFILE_PATH -t "$FULL_IMAGE_NAME" --push .
+      fi
     - docker images
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
@@ -72,8 +76,6 @@ stages:
     - echo "HARBOR_TOKEN=$HARBOR_TOKEN" >> scripts/.env
     - echo "HARBOR_REGISTRY=$HARBOR_REGISTRY" >> scripts/.env
     - docker --version
-    # - docker buildx create --name arm64-builder --driver docker-container --use
-    # - docker buildx inspect --bootstrap
     - chmod +x scripts/docker-login.sh
     - cd scripts
     - sh docker-login.sh
@@ -81,8 +83,14 @@ stages:
   script:
     - FULL_IMAGE_NAME="$HARBOR_REGISTRY/$HARBOR_PROJECT/$IMAGE_NAME:$IMAGE_VERSION-arm64"
     - echo "Building $FULL_IMAGE_NAME"
-    # - docker buildx build --platform $PLATFORMS -f $DOCKERFILE_PATH -t "$FULL_IMAGE_NAME" --push .
-    - docker build -f $DOCKERFILE_PATH -t "$FULL_IMAGE_NAME" --push .
+    - |
+      if [ -n "$TARGET" ]; then
+        echo "Using target: $TARGET"
+        docker build -f $DOCKERFILE_PATH --target $TARGET -t "$FULL_IMAGE_NAME" --push .
+      else
+        echo "No target specified, building default"
+        docker build -f $DOCKERFILE_PATH -t "$FULL_IMAGE_NAME" --push .
+      fi
     - docker images
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger

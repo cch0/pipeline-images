@@ -1,4 +1,4 @@
-# ubuntu-24_04-java.yml
+# ubuntu-24_04-nodejs.yml
 include:
   - local: pipelines/build-multiarch-image-template.yml
 
@@ -15,13 +15,13 @@ stages:
 
 # Common variables for all jobs
 variables:
-  DOCKERFILE_PATH: ubuntu-24_04/Dockerfile-Java
-  IMAGE_NAME: gitlab-pipeline-ubuntu-java
+  DOCKERFILE_PATH: ubuntu-24_04/Dockerfile-Nodejs
+  IMAGE_NAME: gitlab-pipeline-ubuntu-nodejs
   IMAGE_VERSION: '24.04'
   HARBOR_PROJECT: dev-tools
 
 # Build for linux/amd64
-build-ubuntu-24_04-java-amd64:
+build-ubuntu-24_04-nodejs-amd64:
   extends: .build-amd64
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
@@ -30,11 +30,11 @@ build-ubuntu-24_04-java-amd64:
       when: always
     - changes:
         - $DOCKERFILE_PATH
-        - pipelines/ubuntu-24_04-java.yml
+        - pipelines/ubuntu-24_04-nodejs.yml
       when: always
 
 # Build for linux/arm64
-build-ubuntu-24_04-java-arm64:
+build-ubuntu-24_04-nodejs-arm64:
   extends: .build-arm64
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
@@ -43,17 +43,17 @@ build-ubuntu-24_04-java-arm64:
       when: always
     - changes:
         - $DOCKERFILE_PATH
-        - pipelines/ubuntu-24_04-java.yml
+        - pipelines/ubuntu-24_04-nodejs.yml
       when: always
 
 # Create and push manifest
-build-ubuntu-24_04-java-create-manifest:
+build-ubuntu-24_04-nodejs-create-manifest:
   extends: .create-manifest
   stage: packaging
   needs:
-    - job: build-ubuntu-24_04-java-amd64
+    - job: build-ubuntu-24_04-nodejs-amd64
       artifacts: false
-    - job: build-ubuntu-24_04-java-arm64
+    - job: build-ubuntu-24_04-nodejs-arm64
       artifacts: false
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
@@ -62,8 +62,5 @@ build-ubuntu-24_04-java-create-manifest:
       when: always
     - changes:
         - $DOCKERFILE_PATH
-        - pipelines/ubuntu-24_04-java.yml
+        - pipelines/ubuntu-24_04-nodejs.yml
       when: always
-
-
-
