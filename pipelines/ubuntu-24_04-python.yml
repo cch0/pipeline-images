@@ -25,13 +25,13 @@ build-ubuntu-24_04-python-amd64:
   extends: .build-amd64
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
-      when: manual
+      when: always
     - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'  # Push to main
-      when: manual
+      when: always
     - changes:
         - $DOCKERFILE_PATH
         - pipelines/ubuntu-24_04-python.yml
-      when: manual
+      when: always
 
 # Build for linux/arm64
 build-ubuntu-24_04-python-arm64:
