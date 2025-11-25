@@ -7,6 +7,7 @@
     # IMAGE_NAME: ""       # To be overridden
     # IMAGE_VERSION: ""    # To be overridden
     # HARBOR_PROJECT: ""   # To be overridden
+    # TARGET: ""           # To be overridden
 
 
 stages:
@@ -27,6 +28,7 @@ stages:
     - echo "IMAGE_NAME is $IMAGE_NAME"
     - echo "HARBOR_REGISTRY is $HARBOR_REGISTRY"
     - echo "PLATFORMS is $PLATFORMS"
+    - echo "TARGET is $TARGET"
     - echo "HARBOR_USERNAME=$HARBOR_USERNAME" > scripts/.env
     - echo "HARBOR_TOKEN=$HARBOR_TOKEN" >> scripts/.env
     - echo "HARBOR_REGISTRY=$HARBOR_REGISTRY" >> scripts/.env
@@ -51,7 +53,7 @@ stages:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
       when: manual
     - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'  # Push to main
-      when: always
+      when: manual
     - changes:
         - $DOCKERFILE_PATH
       when: always
@@ -72,6 +74,7 @@ stages:
     - echo "IMAGE_NAME is $IMAGE_NAME"
     - echo "HARBOR_REGISTRY is $HARBOR_REGISTRY"
     - echo "PLATFORMS is $PLATFORMS"
+    - echo "TARGET is $TARGET"
     - echo "HARBOR_USERNAME=$HARBOR_USERNAME" > scripts/.env
     - echo "HARBOR_TOKEN=$HARBOR_TOKEN" >> scripts/.env
     - echo "HARBOR_REGISTRY=$HARBOR_REGISTRY" >> scripts/.env
@@ -96,7 +99,7 @@ stages:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
       when: manual
     - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'  # Push to main
-      when: always
+      when: manual
     - changes:
         - $DOCKERFILE_PATH
       when: always
@@ -130,7 +133,7 @@ stages:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
       when: manual
     - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'  # Push to main
-      when: always
+      when: manual
     - changes:
         - $DOCKERFILE_PATH
       when: always
