@@ -5,9 +5,9 @@ include:
 workflow:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
-      when: always
+      when: manual
     - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'  # Push to main
-      when: always
+      when: manual
 
 stages:
   - build
@@ -27,11 +27,11 @@ build-ubuntu-24_04-java-amd64:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
       when: manual
     - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'  # Push to main
-      when: always
+      when: manual
     - changes:
         - $DOCKERFILE_PATH
         - pipelines/ubuntu-24_04-java.yml
-      when: always
+      when: manual
 
 # Build for linux/arm64
 build-ubuntu-24_04-java-arm64:
@@ -40,11 +40,11 @@ build-ubuntu-24_04-java-arm64:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
       when: manual
     - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'  # Push to main
-      when: always
+      when: manual
     - changes:
         - $DOCKERFILE_PATH
         - pipelines/ubuntu-24_04-java.yml
-      when: always
+      when: manual
 
 # Create and push manifest
 build-ubuntu-24_04-java-create-manifest:
@@ -59,11 +59,11 @@ build-ubuntu-24_04-java-create-manifest:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
       when: manual
     - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'  # Push to main
-      when: always
+      when: manual
     - changes:
         - $DOCKERFILE_PATH
         - pipelines/ubuntu-24_04-java.yml
-      when: always
+      when: manual
 
 
 
