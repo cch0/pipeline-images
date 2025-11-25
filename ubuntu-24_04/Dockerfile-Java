@@ -1,0 +1,36 @@
+FROM oci.saicds.com/dev-tools/gitlab-pipeline-ubuntu:24.04
+
+# Set non-interactive frontend to avoid prompts during build
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Define build arguments for tool versions
+ARG MAVEN_VERSION=3.9.9
+ARG GRADLE_VERSION=8.10.2
+ARG SDK_JAVA_IDENTIFIER_25=25.0.1-amzn
+ARG SDK_JAVA_IDENTIFIER_21=21.0.6-amzn
+
+# Install SDKMAN
+RUN curl -s "https://get.sdkman.io" -o sdkman-install.sh \
+    && bash sdkman-install.sh \
+    && rm sdkman-install.sh \
+    && bash -c "source /root/.sdkman/bin/sdkman-init.sh && sdk version"
+
+# # Install Java, Maven, and Gradle using SDKMAN and clean up archives
+RUN bash -c "source /root/.sdkman/bin/sdkman-init.sh && sdk install java ${SDK_JAVA_IDENTIFIER_25}" \
+    && bash -c "source /root/.sdkman/bin/sdkman-init.sh && sdk install java ${SDK_JAVA_IDENTIFIER_21}" \
+    && bash -c "source /root/.sdkman/bin/sdkman-init.sh && sdk install maven ${MAVEN_VERSION}" \
+    && bash -c "source /root/.sdkman/bin/sdkman-init.sh && sdk install gradle ${GRADLE_VERSION}" \
+    && rm -rf /root/.sdkman/archives/*
+
+
+# RUN bash -c "source /root/.sdkman/bin/sdkman-init.sh && sdk install java ${SDK_JAVA_IDENTIFIER_21}" \
+#     && bash -c "source /root/.sdkman/bin/sdkman-init.sh && sdk install maven ${MAVEN_VERSION}" \
+#     && rm -rf /root/.sdkman/archives/*
+
+# # Ensure SDKMAN is sourced for future sessions
+RUN echo "source /root/.sdkman/bin/sdkman-init.sh" >> /root/.bashrc
+
+# # Verify installations
+RUN bash -c "source /root/.sdkman/bin/sdkman-init.sh && java -version" && \
+    bash -c "source /root/.sdkman/bin/sdkman-init.sh && mvn --version" && \
+    bash -c "source /root/.sdkman/bin/sdkman-init.sh && gradle --version"

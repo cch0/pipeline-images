@@ -4,7 +4,8 @@ include:
 
 workflow:
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
+    # - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
+    #   when: manual
     - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'  # Push to main
       when: always
 
@@ -12,7 +13,7 @@ stages:
   - build
 
 # Job using the template for Ubuntu 22.04
-build-ubuntu-22_04-java:
+.build-ubuntu-22_04-java:
   extends: .build-image-template
   variables:
     DOCKERFILE_PATH: ubuntu-22_04/Dockerfile-Java
