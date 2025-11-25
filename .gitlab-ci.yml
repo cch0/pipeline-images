@@ -13,3 +13,5 @@ include:
   # ubuntu 24.04
   - local: pipelines/ubuntu-24_04.yml
   - local: pipelines/ubuntu-24_04-java.yml
+  - local: pipelines/ubuntu-24_04-python.yml
+  - local: pipelines/ubuntu-24_04-nodejs.yml
