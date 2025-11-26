@@ -130,7 +130,32 @@ stages:
     - AMD64_IMAGE="$HARBOR_REGISTRY/$HARBOR_PROJECT/$IMAGE_NAME:$IMAGE_VERSION-amd64"
     - ARM64_IMAGE="$HARBOR_REGISTRY/$HARBOR_PROJECT/$IMAGE_NAME:$IMAGE_VERSION-arm64"
     - echo "Creating manifest for $FINAL_IMAGE"
-    - docker manifest create "$FINAL_IMAGE" --amend "$AMD64_IMAGE" --amend "$ARM64_IMAGE"
+
+    # Check which images exist and build the manifest command
+    - IMAGES=""
+    - |
+      if docker manifest inspect "$AMD64_IMAGE" > /dev/null 2>&1; then
+        echo "✓ AMD64 image found: $AMD64_IMAGE"
+        IMAGES="$IMAGES --amend $AMD64_IMAGE"
+      else
+        echo "✗ AMD64 image not found: $AMD64_IMAGE"
+      fi
+    - |
+      if docker manifest inspect "$ARM64_IMAGE" > /dev/null 2>&1; then
+        echo "✓ ARM64 image found: $ARM64_IMAGE"
+        IMAGES="$IMAGES --amend $ARM64_IMAGE"
+      else
+        echo "✗ ARM64 image not found: $ARM64_IMAGE"
+      fi
+
+    # Create manifest only if at least one image exists
+    - |
+      if [ -z "$IMAGES" ]; then
+        echo "ERROR: No platform images found!"
+        exit 1
+      fi
+    - echo "Creating manifest with:$IMAGES"
+    - docker manifest create "$FINAL_IMAGE" $IMAGES
     - docker manifest push "$FINAL_IMAGE"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
@@ -141,4 +166,4 @@ stages:
         - $DOCKERFILE_PATH
       when: always
   after_script:
-    - docker logout
+    - docker logouts
