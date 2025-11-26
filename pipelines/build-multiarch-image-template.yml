@@ -30,6 +30,24 @@ stages:
     - echo "PLATFORMS is $PLATFORMS"
     - echo "TARGET is $TARGET"
     - echo "IMAGE_VERSION is $IMAGE_VERSION"
+    - mkdir -p scripts
+    - |
+      cat > scripts/docker-login.sh << 'EOF'
+      #!/usr/bin/env sh
+
+      # Check if .env exists and source it
+      if [ -f .env ]; then
+          echo "Sourcing from .env file"
+          source .env
+      else
+          echo "Error: .env file not found!"
+          exit 1
+      fi
+
+      # Exit if docker login fails
+      echo "$HARBOR_TOKEN" | docker login -u "${HARBOR_USERNAME}" --password-stdin "$HARBOR_REGISTRY" || exit 1
+      EOF
+    - chmod +x scripts/docker-login.sh
     - echo "HARBOR_USERNAME=$HARBOR_USERNAME" > scripts/.env
     - echo "HARBOR_TOKEN=$HARBOR_TOKEN" >> scripts/.env
     - echo "HARBOR_REGISTRY=$HARBOR_REGISTRY" >> scripts/.env
@@ -77,6 +95,24 @@ stages:
     - echo "PLATFORMS is $PLATFORMS"
     - echo "TARGET is $TARGET"
     - echo "IMAGE_VERSION is $IMAGE_VERSION"
+    - mkdir -p scripts
+    - |
+      cat > scripts/docker-login.sh << 'EOF'
+      #!/usr/bin/env sh
+
+      # Check if .env exists and source it
+      if [ -f .env ]; then
+          echo "Sourcing from .env file"
+          source .env
+      else
+          echo "Error: .env file not found!"
+          exit 1
+      fi
+
+      # Exit if docker login fails
+      echo "$HARBOR_TOKEN" | docker login -u "${HARBOR_USERNAME}" --password-stdin "$HARBOR_REGISTRY" || exit 1
+      EOF
+    - chmod +x scripts/docker-login.sh
     - echo "HARBOR_USERNAME=$HARBOR_USERNAME" > scripts/.env
     - echo "HARBOR_TOKEN=$HARBOR_TOKEN" >> scripts/.env
     - echo "HARBOR_REGISTRY=$HARBOR_REGISTRY" >> scripts/.env
@@ -117,6 +153,24 @@ stages:
     - self-hosted-amd64
   before_script:
     - echo "IMAGE_VERSION is $IMAGE_VERSION"
+    - mkdir -p scripts
+    - |
+      cat > scripts/docker-login.sh << 'EOF'
+      #!/usr/bin/env sh
+
+      # Check if .env exists and source it
+      if [ -f .env ]; then
+          echo "Sourcing from .env file"
+          source .env
+      else
+          echo "Error: .env file not found!"
+          exit 1
+      fi
+
+      # Exit if docker login fails
+      echo "$HARBOR_TOKEN" | docker login -u "${HARBOR_USERNAME}" --password-stdin "$HARBOR_REGISTRY" || exit 1
+      EOF
+    - chmod +x scripts/docker-login.sh
     - echo "HARBOR_USERNAME=$HARBOR_USERNAME" > scripts/.env
     - echo "HARBOR_TOKEN=$HARBOR_TOKEN" >> scripts/.env
     - echo "HARBOR_REGISTRY=$HARBOR_REGISTRY" >> scripts/.env
