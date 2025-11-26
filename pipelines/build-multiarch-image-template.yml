@@ -29,6 +29,7 @@ stages:
     - echo "HARBOR_REGISTRY is $HARBOR_REGISTRY"
     - echo "PLATFORMS is $PLATFORMS"
     - echo "TARGET is $TARGET"
+    - echo "IMAGE_VERSION is $IMAGE_VERSION"
     - echo "HARBOR_USERNAME=$HARBOR_USERNAME" > scripts/.env
     - echo "HARBOR_TOKEN=$HARBOR_TOKEN" >> scripts/.env
     - echo "HARBOR_REGISTRY=$HARBOR_REGISTRY" >> scripts/.env
@@ -75,6 +76,7 @@ stages:
     - echo "HARBOR_REGISTRY is $HARBOR_REGISTRY"
     - echo "PLATFORMS is $PLATFORMS"
     - echo "TARGET is $TARGET"
+    - echo "IMAGE_VERSION is $IMAGE_VERSION"
     - echo "HARBOR_USERNAME=$HARBOR_USERNAME" > scripts/.env
     - echo "HARBOR_TOKEN=$HARBOR_TOKEN" >> scripts/.env
     - echo "HARBOR_REGISTRY=$HARBOR_REGISTRY" >> scripts/.env
@@ -114,6 +116,7 @@ stages:
   tags:
     - self-hosted-amd64
   before_script:
+    - echo "IMAGE_VERSION is $IMAGE_VERSION"
     - echo "HARBOR_USERNAME=$HARBOR_USERNAME" > scripts/.env
     - echo "HARBOR_TOKEN=$HARBOR_TOKEN" >> scripts/.env
     - echo "HARBOR_REGISTRY=$HARBOR_REGISTRY" >> scripts/.env
