@@ -8,6 +8,10 @@ workflow:
       when: manual
     - if: '$CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "push"'  # Push to main
       when: manual
+    - changes:
+        - $DOCKERFILE_PATH
+        - pipelines/ubuntu-24_04-nodejs.yml
+      when: always
 
 stages:
   - build
