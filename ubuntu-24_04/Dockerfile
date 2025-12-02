@@ -90,3 +90,5 @@ RUN docker --version && \
     ssh -V && \
     wget --version && \
     zip --version
+
+USER ubuntu

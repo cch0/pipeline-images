@@ -35,3 +35,5 @@ RUN bash -c "source $HOME/.nvm/nvm.sh && nvm --version" \
     && bash -c "source $HOME/.nvm/nvm.sh && nvm use ${NODE_VERSION_20} && node --version && npm --version" \
     && bash -c "source $HOME/.nvm/nvm.sh && nvm use ${NODE_VERSION_22} && node --version && npm --version" \
     && bash -c "source $HOME/.nvm/nvm.sh && nvm ls"
+
+USER ubuntu

@@ -34,3 +34,5 @@ RUN echo "source /root/.sdkman/bin/sdkman-init.sh" >> /root/.bashrc
 RUN bash -c "source /root/.sdkman/bin/sdkman-init.sh && java -version" && \
     bash -c "source /root/.sdkman/bin/sdkman-init.sh && mvn --version" && \
     bash -c "source /root/.sdkman/bin/sdkman-init.sh && gradle --version"
+
+USER ubuntu
