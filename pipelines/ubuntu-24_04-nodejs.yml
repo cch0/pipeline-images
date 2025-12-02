@@ -20,7 +20,7 @@ stages:
 
 # Common variables for all jobs
 variables:
-  DOCKERFILE_PATH: ubuntu-24_04/Dockerfile-Nodejs
+  # DOCKERFILE_PATH: ubuntu-24_04/Dockerfile-Nodejs
   IMAGE_NAME: gitlab-pipeline-ubuntu-nodejs
   IMAGE_VERSION: '24.04'
   HARBOR_PROJECT: dev-tools
