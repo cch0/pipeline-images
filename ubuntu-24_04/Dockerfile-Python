@@ -41,7 +41,7 @@ RUN pyenv install ${PYTHON_VERSION_310} \
     && pyenv global ${PYTHON_VERSION_310} ${PYTHON_VERSION_311} ${PYTHON_VERSION_312}
 
 # install uv
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh -s -- --bin-dir /usr/local/bin
 
 # Ensure pyenv is sourced for future sessions
 RUN echo 'export PYENV_ROOT=/root/.pyenv' >> /root/.bashrc \
