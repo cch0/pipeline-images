@@ -17,12 +17,6 @@ stages:
   - build
   - packaging
 
-# Common variables for all jobs
-# variables:
-#   DOCKERFILE_PYTHON: ubuntu-24_04/Dockerfile-Python
-#   IMAGE_NAME: gitlab-pipeline-ubuntu-python
-#   IMAGE_VERSION: '24.04'
-#   HARBOR_PROJECT: dev-tools
 
 # Build for linux/amd64
 build-ubuntu-24_04-python-amd64:

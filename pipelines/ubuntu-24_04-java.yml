@@ -18,16 +18,15 @@ stages:
   - build
   - packaging
 
-# Common variables for all jobs
-variables:
-  DOCKERFILE_PATH: ubuntu-24_04/Dockerfile-Java
-  IMAGE_NAME: gitlab-pipeline-ubuntu-java
-  IMAGE_VERSION: '24.04'
-  HARBOR_PROJECT: dev-tools
 
 # Build for linux/amd64
 build-ubuntu-24_04-java-amd64:
   extends: .build-amd64
+  variables:
+    DOCKERFILE_PATH: ubuntu-24_04/Dockerfile-Java
+    IMAGE_NAME: gitlab-pipeline-ubuntu-java
+    IMAGE_VERSION: '24.04'
+    HARBOR_PROJECT: dev-tools
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
       when: manual
@@ -41,6 +40,11 @@ build-ubuntu-24_04-java-amd64:
 # Build for linux/arm64
 build-ubuntu-24_04-java-arm64:
   extends: .build-arm64
+  variables:
+    DOCKERFILE_PATH: ubuntu-24_04/Dockerfile-Java
+    IMAGE_NAME: gitlab-pipeline-ubuntu-java
+    IMAGE_VERSION: '24.04'
+    HARBOR_PROJECT: dev-tools
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
       when: manual
@@ -54,6 +58,11 @@ build-ubuntu-24_04-java-arm64:
 # Create and push manifest
 build-ubuntu-24_04-java-create-manifest:
   extends: .create-manifest
+  variables:
+    DOCKERFILE_PATH: ubuntu-24_04/Dockerfile-Java
+    IMAGE_NAME: gitlab-pipeline-ubuntu-java
+    IMAGE_VERSION: '24.04'
+    HARBOR_PROJECT: dev-tools
   stage: packaging
   needs:
     - job: build-ubuntu-24_04-java-amd64
