@@ -9,8 +9,6 @@ ARG GRADLE_VERSION=8.10.2
 ARG SDK_JAVA_IDENTIFIER_25=25.0.1-amzn
 ARG SDK_JAVA_IDENTIFIER_21=21.0.6-amzn
 
-USER root
-
 # Install SDKMAN
 RUN curl -s "https://get.sdkman.io" -o sdkman-install.sh \
     && bash sdkman-install.sh \
@@ -36,5 +34,3 @@ RUN echo "source /root/.sdkman/bin/sdkman-init.sh" >> /root/.bashrc
 RUN bash -c "source /root/.sdkman/bin/sdkman-init.sh && java -version" && \
     bash -c "source /root/.sdkman/bin/sdkman-init.sh && mvn --version" && \
     bash -c "source /root/.sdkman/bin/sdkman-init.sh && gradle --version"
-
-USER ubuntu
