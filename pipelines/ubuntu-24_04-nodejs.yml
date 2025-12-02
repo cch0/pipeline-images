@@ -26,7 +26,7 @@ variables:
   HARBOR_PROJECT: dev-tools
 
 # Build for linux/amd64
-build-ubuntu-24_04-nodejs-amd64:
+.build-ubuntu-24_04-nodejs-amd64:
   extends: .build-amd64
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
@@ -39,7 +39,7 @@ build-ubuntu-24_04-nodejs-amd64:
       when: manual
 
 # Build for linux/arm64
-build-ubuntu-24_04-nodejs-arm64:
+.build-ubuntu-24_04-nodejs-arm64:
   extends: .build-arm64
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web"'  # Manual trigger
@@ -52,7 +52,7 @@ build-ubuntu-24_04-nodejs-arm64:
       when: manual
 
 # Create and push manifest
-build-ubuntu-24_04-nodejs-create-manifest:
+.build-ubuntu-24_04-nodejs-create-manifest:
   extends: .create-manifest
   stage: packaging
   needs:
